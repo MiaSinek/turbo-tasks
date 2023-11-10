@@ -1,16 +1,33 @@
 <div class="mx-auto w-1/2">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-  <% end %>
   <h2 class="text-2xl text-gray-900">
     Your Tasks
   </h2>
-  <div class="w-full max-w-2xl bg-gray-100 py-8 px-4 border border-gray-200 rounded shadow-sm">
-    <div class="py-2 px-4">
-      <%= render "form", task: Task.new %>
+
+  <%= turbo_frame_tag "tasks-container", class: "block max-w-2xl w-full bg-gray-100 py-8 px-4 border border-gray-200 rounded shadow-sm" do %>
+    <div class="border-b border-gray-200 w-full">
+      <ul class="flex space-x-2 justify-center">
+        <li>
+          <%= link_to "Incomplete",
+            tasks_path(status: "incomplete"),
+            class: "inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300"
+          %>
+        <li>
+          <%= link_to "Complete",
+            tasks_path(status: "complete"),
+            class: "inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300"
+          %>
+        </li>
+      </ul>
     </div>
+
+    <% unless params[:status] == "complete" %>
+      <div class="py-2 px-4">
+        <%= render "form", task: Task.new %>
+      </div>
+    <% end %>
+
     <ul id="tasks">
       <%= render @tasks %>
     </ul>
-  </div>
+  <% end %>
 </div>

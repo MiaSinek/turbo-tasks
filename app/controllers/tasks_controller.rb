@@ -1,9 +1,17 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: %i[ show edit update destroy ]
+  before_action :set_task, only: %i[ show edit update destroy change_status ]
+
+  def change_status
+    @task.update(status: task_params[:status])
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("#{helpers.dom_id(@task)}_container") }
+      format.html { redirect_to tasks_path, notice: "Updated task status." }
+    end
+  end
 
   # GET /tasks or /tasks.json
   def index
-    @tasks = Task.all
+    @tasks = Task.where(status: params[:status].presence || 'incomplete')
   end
 
   # GET /tasks/1 or /tasks/1.json
