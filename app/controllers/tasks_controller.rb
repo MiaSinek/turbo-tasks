@@ -29,6 +29,7 @@ class TasksController < ApplicationController
         format.turbo_stream
         format.html { redirect_to task_url(@task), notice: "Task was successfully created." }
       else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@task)}_form", partial: "form", locals: { task: @task }) }
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -42,6 +43,7 @@ class TasksController < ApplicationController
         format.html { redirect_to task_url(@task), notice: "Task was successfully updated." }
         format.json { render :show, status: :ok, location: @task }
       else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@task)}_form", partial: "form", locals: { task: @task }) }
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @task.errors, status: :unprocessable_entity }
       end
